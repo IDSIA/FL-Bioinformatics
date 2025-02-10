@@ -63,6 +63,7 @@ def main(driver: Driver, context: Context) -> None:
     paramsrecord = context.state.parameters_records[MAIN_PARAMS_RECORD]
     parameters = compat.parametersrecord_to_parameters(paramsrecord, True)
     ndarrays = parameters_to_ndarrays(parameters)
+    np.save("output.npy", ndarrays)
     
     # Prepare screen output
     df_out = get_output_df(ndarrays)
