@@ -1,6 +1,6 @@
 """Defining a custom Federated Summing strategy.
 
-This strategy is based on the FedAvg implementation provided by Flower.
+This custom strategy is based on the FedAvg implementation provided by Flower, with the necessary modifications.
 """
 
 
@@ -196,14 +196,14 @@ class FedSum(Strategy):
         self, server_round: int, parameters: Parameters
     ) -> Optional[tuple[float, dict[str, Scalar]]]:
         """Dummy function."""
-        # Return fixed dummy values
-        return 1., {"dummy_metric": 1.}
+        # No evaluation is configured
+        return None
     
     def configure_evaluate(
         self, server_round: int, parameters: Parameters, client_manager: ClientManager
     ) -> list[tuple[ClientProxy, EvaluateIns]]:
         """Dummy function."""
-        # Return an empty list as no evaluation is configured
+        # No evaluation is configured
         return []
     
     def aggregate_evaluate(
@@ -213,5 +213,5 @@ class FedSum(Strategy):
         failures: list[Union[tuple[ClientProxy, EvaluateRes], BaseException]],
     ) -> tuple[Optional[float], dict[str, Scalar]]:
         """Dummy function."""
-        # Return fixed dummy values
-        return 1., {"dummy_metric": 1.}
+        # No evaluation is configured
+        return None, {}
