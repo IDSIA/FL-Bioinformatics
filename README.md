@@ -9,4 +9,4 @@ We provide three different examples:
 
 We recommend exploring the examples in the given order, as this will simplify the learning process. All examples are referenced in the paper’s section *"How to Conduct Federation of Specific Operations in Bioinformatics."*
 
-The exampels are implemented using the simulation mode of the Federated Learning framework Flower. For more information on Flower, we refer the reader to [Flower's webpage](https://flower.ai/docs/framework/tutorial-series-get-started-with-flower-pytorch.html).
+The examples are implemented using the simulation mode of the Federated Learning framework Flower. For more information on Flower, we refer the reader to [Flower's webpage](https://flower.ai/docs/framework/tutorial-series-get-started-with-flower-pytorch.html).
