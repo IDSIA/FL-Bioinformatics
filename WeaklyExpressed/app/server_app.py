@@ -1,7 +1,6 @@
 """WeaklyExpressed: A Flower for weakly expressed genes detection."""
 
 from logging import DEBUG, INFO
-import csv 
 import numpy as np
 import pandas as pd
 
