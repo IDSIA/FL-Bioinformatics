@@ -18,8 +18,6 @@ from flwr.server.workflow.secure_aggregation.secaggplus_workflow import (
 
 
 class SecAggPlusWorkflowWithLogs(SecAggPlusWorkflow):
-    """The SecAggPlusWorkflow augmented for this example.
-    """
 
     node_ids = []
 
