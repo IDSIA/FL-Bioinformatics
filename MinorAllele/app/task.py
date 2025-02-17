@@ -171,9 +171,19 @@ def compute_maf(allele_frequencies_np: np.ndarray):
     Returns:
         np.ndarray: A 1D NumPy array containing the MAF for each SNP.
     """
-    # MAF is the minimum of the two allele frequencies for each SNP
-    maf = np.min(allele_frequencies_np, axis=1)
-    return maf
+    
+    # If the lowest is 0, find the second lowest by removing the lowest value
+    result = []
+    for row in allele_frequencies_np:
+        if np.min(row) == 0:
+            # Get the second lowest value by removing the lowest and finding the new minimum
+            second_lowest = np.partition(row, 1)[1]  # This gives us the second smallest value
+            result.append(second_lowest)
+        else:
+            result.append(np.min(row))
+    
+    return np.array(result)
+    
 
 
 def create_out_df(snps, mafs):
