@@ -10,6 +10,8 @@ license = "Apache-2.0"
 dependencies = [
     "flwr[simulation]>=1.13.1",
     "numpy>=1.21.0",
+    "ray",
+    "flwr_datasets"
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -26,7 +28,7 @@ clientapp = "app.client_app:app"
 # Number of vector components
 num_individuals = 100
 num_snps = 5
-seed_value = 21
+seed_value = 255
 
 # Parameters for the SecAgg+ protocol
 num-shares = 3

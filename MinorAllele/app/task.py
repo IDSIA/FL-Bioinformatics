@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from datasets import Dataset
 from collections import Counter
+from itertools import combinations_with_replacement
 
 from flwr_datasets import FederatedDataset
 from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
@@ -18,32 +19,66 @@ def get_dummy_start():
     """
     return np.ones((1, 1))
 
-def generate_gwas_dataset(num_individuals: int, num_snps: int, seed_value: int):
+
+def get_SNP_names(num_snps):
+
+    return [f"SNP_{i+1}" for i in range(num_snps)]    
+
+
+def generate_gwas_dataset(num_individuals: int, num_snps: int, seed_value: int, min_maf: float = 0.05):
     """
-    Generates a synthetic GWAS dataset with random SNP genotypes for multiple alleles.
+    Generates a synthetic GWAS dataset where SNP genotypes follow Hardy-Weinberg Equilibrium 
+    for multiallelic SNPs (more than two alleles), ensuring MAF >= min_maf.
 
     Parameters:
         num_individuals (int): Number of individuals (rows in dataset).
         num_snps (int): Number of SNPs (columns in dataset).
-        seed (int): Random seed for reproducibility.
+        seed_value (int): Random seed for reproducibility.
+        min_maf (float): Minimum minor allele frequency (default = 0.01).
 
     Returns:
-        pd.DataFrame: A GWAS dataset where each cell represents a genotype based on the provided alleles.
+        pd.DataFrame: A GWAS dataset where each SNP follows HWE with multiple alleles.
     """
     np.random.seed(seed_value)
     
-    # Generate all possible genotype combinations from the given alleles
-    alleles = ['A', 'G', 'C', 'T']
-    genotypes = [f"{a}{b}" for i, a in enumerate(alleles) for b in alleles[i:]]  # This creates combinations like AA, AG, GG, etc.
-    
-    # Generate random SNP genotypes for each individual
-    data = np.random.choice(genotypes, size=(num_individuals, num_snps))
-    
-    # Create DataFrame with SNP names
+    alleles = ['A', 'G', 'C', 'T']  # Possible alleles
     snp_names = [f"SNP_{i+1}" for i in range(num_snps)]
     individual_ids = [f"Ind_{i+1}" for i in range(num_individuals)]
     
-    df = pd.DataFrame(data, columns=snp_names, index=individual_ids)
+    data = []
+
+    for _ in range(num_snps):
+        # Randomly select 3 or 4 alleles for this SNP
+        num_alleles = np.random.choice([3, 4])
+        selected_alleles = np.random.choice(alleles, num_alleles, replace=False)
+
+        # Generate valid allele frequencies (ensuring MAF ≥ min_maf)
+        while True:
+            allele_freqs = np.random.dirichlet(np.ones(num_alleles))  # Generates valid frequencies
+            if np.min(allele_freqs) >= min_maf:
+                break  # Accept only if the MAF condition is met
+
+        # Map allele frequencies
+        allele_dict = dict(zip(selected_alleles, allele_freqs))
+        
+        # Generate all possible genotypes
+        genotypes = ["".join(sorted(comb)) for comb in combinations_with_replacement(selected_alleles, 2)]
+        
+        # Compute Hardy-Weinberg probabilities
+        genotype_probs = {f"{a}{b}": 2 * allele_dict[a] * allele_dict[b] if a != b else allele_dict[a]**2
+                          for a, b in combinations_with_replacement(selected_alleles, 2)}
+
+        # Normalize probabilities (to avoid rounding errors)
+        prob_sum = sum(genotype_probs.values())
+        for key in genotype_probs:
+            genotype_probs[key] /= prob_sum  
+
+        # Generate genotypes for individuals
+        snp_genotypes = np.random.choice(genotypes, size=num_individuals, p=list(genotype_probs.values()))
+        data.append(snp_genotypes)
+
+    # Create DataFrame
+    df = pd.DataFrame(np.array(data).T, columns=snp_names, index=individual_ids)
     
     return df
 
@@ -124,7 +159,7 @@ def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_
         
     partition = partitioner.load_partition(partition_id).with_format("pandas").to_pandas()
     
-    return partition
+    return partition.iloc[:,:-1]
 
 def compute_maf(allele_frequencies_np: np.ndarray):
     """
@@ -139,3 +174,10 @@ def compute_maf(allele_frequencies_np: np.ndarray):
     # MAF is the minimum of the two allele frequencies for each SNP
     maf = np.min(allele_frequencies_np, axis=1)
     return maf
+
+
+def create_out_df(snps, mafs):
+    
+    data = pd.DataFrame(index = snps)
+    data['MAF'] = mafs
+    return data

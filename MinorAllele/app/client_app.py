@@ -7,7 +7,7 @@ from flwr.client import ClientApp, NumPyClient
 from flwr.client.mod import secaggplus_mod
 from flwr.common import Context
 
-from app.task import load_data, count_alleles, compute_allele_frequencies_np, compute_allele_frequencies_np
+from app.task import load_data, count_alleles, compute_allele_frequencies_np, compute_allele_frequencies_np , get_SNP_names
 
 
 # Define Flower Client
@@ -21,7 +21,6 @@ class FlowerClient(NumPyClient):
     def fit(self, parameters, config):
         allele_counts_df = count_alleles(self.data)
         allele_frequencies_np = compute_allele_frequencies_np(allele_counts_df)
-        
         return [allele_frequencies_np], len(self.data), {}
         
 
@@ -38,7 +37,6 @@ def client_fn(context: Context):
     seed_value = context.run_config["seed_value"]
 
     data = load_data(partition_id, num_partitions, num_individuals, num_snps, seed_value)
-    
     return FlowerClient(timeout, data).to_client() 
 
 

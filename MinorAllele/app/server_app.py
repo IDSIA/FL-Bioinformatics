@@ -12,7 +12,7 @@ from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
 from flwr.server.strategy import FedAvg
 
-from app.task import get_dummy_start, compute_maf
+from app.task import get_dummy_start, compute_maf, get_SNP_names, create_out_df
 from app.workflow_with_log import SecAggPlusWorkflowWithLogs
 
 
@@ -65,9 +65,14 @@ def main(driver: Driver, context: Context) -> None:
     ndarrays = parameters_to_ndarrays(parameters)
 
     # Ensure values is a NumPy array
-    values = np.array(ndarrays[0]) 
+    values = np.array(ndarrays[0])
+
     print(values)
+    # Create the output
     out = compute_maf(values)
+    names = get_SNP_names(len(out))
+    out_df = create_out_df(names,out)
+    out_df.to_csv('maf_out.csv')
 
     log(INFO, "")
     log(
@@ -76,7 +81,7 @@ def main(driver: Driver, context: Context) -> None:
     )
     
     # Format the output to show the first two digits for each MAF value
-    formatted_out = ["{:.2f}".format(maf) for maf in out]
+    formatted_out = [f"{name}, {round(maf,2)}" for name,maf in zip(names,out)]
     
     log(
         INFO,
