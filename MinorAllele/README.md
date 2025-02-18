@@ -1,4 +1,4 @@
-# WeaklyExpressed: A Flower for weakly expressed genes detection.
+# MinorAllele: A Flower for Minor Allele Frequency
 
 ## Introduction
 
