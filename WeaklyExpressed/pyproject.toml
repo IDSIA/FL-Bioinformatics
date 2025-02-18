@@ -28,7 +28,7 @@ num_individuals = 100  # Total number of individuals in the dataset
 num_genes = 10  # Number of genes analyzed per individual
 seed_value = 21  # Random seed for reproducibility
 
-# Secure Aggregation (SecAgg+) parameters
+# Secure Aggregation (SecAggPlus) parameters
 num-shares = 3  # Number of secret shares for secure aggregation
 reconstruction-threshold = 2  # Minimum number of shares required for reconstruction
 timeout = 15.0  # Timeout duration (seconds) for secure aggregation

@@ -2,7 +2,6 @@
 
 from logging import DEBUG, INFO
 import numpy as np
-import pandas as pd
 
 from flwr.common import Context, ndarrays_to_parameters, parameters_to_ndarrays, log
 from flwr.common.logger import update_console_handler
@@ -13,7 +12,6 @@ from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
 from flwr.server.strategy import FedAvg
 
 from app.task import get_dummy_start, get_gene_names, get_output_df, get_output_list
-from app.workflow_with_log import SecAggPlusWorkflowWithLogs
 
 
 # Flower ServerApp
@@ -43,10 +41,10 @@ def main(driver: Driver, context: Context) -> None:
     )
 
     # Create fit workflow
-    # For further information, please see:
-    # https://flower.ai/docs/framework/ref-api/flwr.server.workflow.SecAggPlusWorkflow.html
+    # For further information on SecAggPlus with Flower, please refer to:
+    # https://flower.ai/docs/examples/flower-secure-aggregation.html
     update_console_handler(DEBUG, True, True)
-    fit_workflow = SecAggPlusWorkflowWithLogs(
+    fit_workflow = SecAggPlusWorkflow(
         num_shares=context.run_config["num-shares"],
         reconstruction_threshold=context.run_config["reconstruction-threshold"],
         timeout=context.run_config["timeout"],
