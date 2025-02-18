@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "SecureSum"
 version = "1.0.0"
-description = "A Flower for custom secure sum strategy using SecAgg+"
+description = "A Flower for custom secure sum strategy using SecAggPlus"
 license = "Apache-2.0"
 dependencies = [
     "flwr[simulation]>=1.14.0",
@@ -25,7 +25,7 @@ clientapp = "app.client_app:app"
 # Number of vector components
 N = 5
 
-# Secure Aggregation (SecAgg+) parameters
+# Secure Aggregation (SecAggPlus) parameters
 num-shares = 3  # Number of secret shares for secure aggregation
 reconstruction-threshold = 2  # Minimum number of shares required for reconstruction
 timeout = 15.0  # Timeout duration (seconds) for secure aggregation
