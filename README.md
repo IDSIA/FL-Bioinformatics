@@ -13,3 +13,19 @@ Please note that Flower does not provide a built-in strategy for federated secur
 
 The examples are implemented using the simulation mode of the Federated Learning framework Flower. For more information on Flower, we refer the reader to [Flower's webpage](https://flower.ai/docs/framework/tutorial-series-get-started-with-flower-pytorch.html).
 
+
+
+## Create the conda environment
+
+To run the examples in this Project install all the dependencies in a conda environment by running the following commands.
+
+```bash
+conda env create -f FL_Bio.yaml
+```
+Next, activate the environment by running:
+
+```bash
+conda activate FL_Bio
+
+```
+

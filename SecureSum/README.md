@@ -6,18 +6,6 @@ This example shows how to use Flower to define a custom strategy that performs o
 
 For more information on Flower, we refer the reader to [Flower's webpage](https://flower.ai/docs/framework/tutorial-series-get-started-with-flower-pytorch.html).
 
-## If not installed, install Flower as well as dependencies
-
-To install Flower, run the following command:
-
-```bash
-pip install flwr
-```
-Next, install dependencies: 
-
-```bash
-pip install -e .
-```
 
 ## Run the federated simulation with the Simulation Engine
 

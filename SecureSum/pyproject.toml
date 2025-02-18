@@ -7,9 +7,7 @@ name = "SecureSum"
 version = "1.0.0"
 description = "A Flower for custom secure sum strategy using SecAggPlus"
 license = "Apache-2.0"
-dependencies = [
-    "flwr[simulation]>=1.14.0",
-]
+
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]

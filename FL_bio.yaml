@@ -1,16 +1,12 @@
-name: FL_Bio  # Name of the environment
+name: FL_Bio  
 channels:
-  - conda-forge  # Add 'conda-forge' for more package availability
+  - conda-forge  
   - defaults
 
 dependencies:
-  # Specify Python version
   - python=3.12.9
 
-  # Essential dependencies
-  - pip  # Include pip if you need to install pip-only packages
-
-  # Install pip packages inside Conda
+  - pip  
   - pip:
       - "flwr[simulation]>=1.13.1"
       - "numpy>=1.21.0"
