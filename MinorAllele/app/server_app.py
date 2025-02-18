@@ -13,7 +13,6 @@ from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
 from flwr.server.strategy import FedAvg
 
 from app.task import get_dummy_start, compute_maf, get_SNP_names, create_out_df
-from app.workflow_with_log import SecAggPlusWorkflowWithLogs
 
 
 # Flower ServerApp
@@ -46,7 +45,7 @@ def main(driver: Driver, context: Context) -> None:
     # For further information, please see:
     # https://flower.ai/docs/framework/ref-api/flwr.server.workflow.SecAggPlusWorkflow.html
     update_console_handler(DEBUG, True, True)
-    fit_workflow = SecAggPlusWorkflowWithLogs(
+    fit_workflow = SecAggPlusWorkflow(
         num_shares=context.run_config["num-shares"],
         reconstruction_threshold=context.run_config["reconstruction-threshold"],
         clipping_range=context.run_config["clipping_range"],
