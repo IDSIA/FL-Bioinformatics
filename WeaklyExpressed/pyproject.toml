@@ -7,12 +7,6 @@ name = "WeaklyExpressed"
 version = "1.0.0"
 description = "A Flower for weakly expressed genes detection"
 license = "Apache-2.0"
-dependencies = [
-    "flwr[simulation]>=1.13.1",
-    "numpy>=1.21.0",
-    "ray",
-    "flwr_datasets"
-]
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
