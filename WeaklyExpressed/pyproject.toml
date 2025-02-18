@@ -10,6 +10,8 @@ license = "Apache-2.0"
 dependencies = [
     "flwr[simulation]>=1.13.1",
     "numpy>=1.21.0",
+    "ray",
+    "flwr_datasets"
 ]
 
 [tool.hatch.build.targets.wheel]
