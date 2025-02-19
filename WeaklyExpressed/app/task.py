@@ -1,12 +1,10 @@
 """WeaklyExpressed: A Flower for weakly expressed genes detection."""
 
-import random
 import numpy as np
 import pandas as pd
 from datasets import Dataset
 
-from flwr_datasets import FederatedDataset
-from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
+from flwr_datasets.partitioner import IidPartitioner
 
 
 ### Create and partition simulation dataset
@@ -116,7 +114,7 @@ def get_dummy_start():
     return np.ones((1, 1))
 
 
-### Process results of federated process
+### Results of federated process
     
 def get_output_df(expr_array: np.array):
     """

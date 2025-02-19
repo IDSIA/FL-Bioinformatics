@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "MinorAllele"
 version = "1.0.0"
-description = ""
+description = "A Flower for minor allele frequency"
 license = "Apache-2.0"
 
 [tool.hatch.build.targets.wheel]
@@ -19,17 +19,15 @@ serverapp = "app.server_app:app"
 clientapp = "app.client_app:app"
 
 [tool.flwr.app.config]
-# Number of vector components
-num_individuals = 100
-num_snps = 5
-seed_value = 255
+# Simulation dataset parameters
+num_individuals = 100  # Total number of individuals in the dataset
+num_snps = 5  # Number of SNPs analyzed per individual
+seed_value = 255  # Random seed for reproducibility
 
-# Parameters for the SecAgg+ protocol
-num-shares = 3
-reconstruction-threshold = 2
-clipping_range = 1.0
-timeout = 15.0
-
+# Secure Aggregation (SecAggPlus) parameters
+num-shares = 3  # Number of secret shares for secure aggregation
+reconstruction-threshold = 2  # Minimum number of shares required for reconstruction
+timeout = 15.0  # Timeout duration (seconds) for secure aggregation
 
 [tool.flwr.federations]
 default = "local-simulation"

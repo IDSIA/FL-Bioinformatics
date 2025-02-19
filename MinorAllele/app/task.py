@@ -1,29 +1,18 @@
-"""weaklyexpr: A Flower for weakly expressed genes."""
+"""MinorAllele: A Flower for minor allele frequency."""
 
-import random
 import numpy as np
 import pandas as pd
 from datasets import Dataset
 from collections import Counter
 from itertools import combinations_with_replacement
 
-from flwr_datasets import FederatedDataset
-from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
+from flwr_datasets.partitioner import IidPartitioner
 
-def get_dummy_start():
-    """
-    Returns a dummy starting value for initialization.
-
-    Returns:
-        np.ndarray: A 1x1 numpy array filled with ones.
-    """
-    return np.ones((1, 1))
-
+### Create and partition simulation dataset
 
 def get_SNP_names(num_snps):
 
     return [f"SNP_{i+1}" for i in range(num_snps)]    
-
 
 def generate_gwas_dataset(num_individuals: int, num_snps: int, seed_value: int, min_maf: float = 0.05):
     """
@@ -82,6 +71,41 @@ def generate_gwas_dataset(num_individuals: int, num_snps: int, seed_value: int, 
     
     return df
 
+partitioner = None
+
+def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_snps: int, seed_value: int):
+    """
+    Loads a partition of the synthetic gene expression dataset.
+    
+    Parameters:
+        partition_id (int): The ID of the partition to load.
+        num_partitions (int): Total number of partitions.
+        num_individuals (int): Number of individuals in the dataset.
+        num_genes (int): Number of genes in the dataset.
+        seed_value (int): Random seed for reproducibility.
+
+    Returns:
+        pd.DataFrame: The selected partition of the dataset.
+    """
+    global partitioner
+    
+    if partitioner is None:  # Create partitioner only once
+        np.random.seed(seed_value)
+        
+        dataset = generate_gwas_dataset(num_individuals, num_snps, seed_value)
+        dataset = Dataset.from_pandas(dataset)
+
+        np.random.seed(seed_value)
+        partitioner = IidPartitioner(num_partitions)
+        partitioner.dataset = dataset
+        
+    partition = partitioner.load_partition(partition_id).with_format("pandas").to_pandas()
+    
+    return partition.iloc[:,:-1]
+
+
+### Perform local computation (allele frequencies)
+
 def count_alleles(gwas_df: pd.DataFrame):
     """
     Counts the occurrences of each allele (A and G) for every SNP in the dataset.
@@ -129,38 +153,6 @@ def compute_allele_frequencies_np(allele_counts_df: pd.DataFrame):
     # Convert to NumPy array
     return np.column_stack((A_frequency, C_frequency, G_frequency, T_frequency))
 
-partitioner = None
-
-def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_snps: int, seed_value: int):
-    """
-    Loads a partition of the synthetic gene expression dataset.
-    
-    Parameters:
-        partition_id (int): The ID of the partition to load.
-        num_partitions (int): Total number of partitions.
-        num_individuals (int): Number of individuals in the dataset.
-        num_genes (int): Number of genes in the dataset.
-        seed_value (int): Random seed for reproducibility.
-
-    Returns:
-        pd.DataFrame: The selected partition of the dataset.
-    """
-    global partitioner
-    
-    if partitioner is None:  # Create partitioner only once
-        np.random.seed(seed_value)
-        
-        dataset = generate_gwas_dataset(num_individuals, num_snps, seed_value)
-        dataset = Dataset.from_pandas(dataset)
-
-        np.random.seed(seed_value)
-        partitioner = IidPartitioner(num_partitions)
-        partitioner.dataset = dataset
-        
-    partition = partitioner.load_partition(partition_id).with_format("pandas").to_pandas()
-    
-    return partition.iloc[:,:-1]
-
 def compute_maf(allele_frequencies_np: np.ndarray):
     """
     Computes the Minor Allele Frequency (MAF) for each SNP.
@@ -183,8 +175,21 @@ def compute_maf(allele_frequencies_np: np.ndarray):
             result.append(np.min(row))
     
     return np.array(result)
-    
 
+
+### Initial conditions for FL process
+    
+def get_dummy_start():
+    """
+    Returns a dummy starting value for initialization.
+
+    Returns:
+        np.ndarray: A 1x1 numpy array filled with ones.
+    """
+    return np.ones((1, 1))
+
+
+### Results of federated process
 
 def create_out_df(snps, mafs):
     

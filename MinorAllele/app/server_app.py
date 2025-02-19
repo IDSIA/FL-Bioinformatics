@@ -1,7 +1,6 @@
-"""weaklyexpr: A Flower for weakly expressed genes."""
+"""MinorAllele: A Flower for minor allele frequency."""
 
 from logging import DEBUG, INFO
-import csv 
 import numpy as np
 
 from flwr.common import Context, ndarrays_to_parameters, parameters_to_ndarrays, log
@@ -42,13 +41,12 @@ def main(driver: Driver, context: Context) -> None:
     )
 
     # Create fit workflow
-    # For further information, please see:
-    # https://flower.ai/docs/framework/ref-api/flwr.server.workflow.SecAggPlusWorkflow.html
+    # For further information on SecAggPlus with Flower, please refer to:
+    # https://flower.ai/docs/examples/flower-secure-aggregation.html
     update_console_handler(DEBUG, True, True)
     fit_workflow = SecAggPlusWorkflow(
         num_shares=context.run_config["num-shares"],
         reconstruction_threshold=context.run_config["reconstruction-threshold"],
-        clipping_range=context.run_config["clipping_range"],
         timeout=context.run_config["timeout"],
     )
 
@@ -65,8 +63,8 @@ def main(driver: Driver, context: Context) -> None:
 
     # Ensure values is a NumPy array
     values = np.array(ndarrays[0])
+    #print(values)
 
-    print(values)
     # Create the output
     out = compute_maf(values)
     names = get_SNP_names(len(out))

@@ -1,8 +1,5 @@
 """WeaklyExpressed: A Flower for weakly expressed genes detection."""
 
-import time
-from datasets import load_dataset
-
 from flwr.client import ClientApp, NumPyClient
 from flwr.client.mod import secaggplus_mod
 from flwr.common import Context
@@ -27,7 +24,7 @@ class FlowerClient(NumPyClient):
 
 def client_fn(context: Context):
 
-    # Retrieve timeout (necessary for SecAgg+)
+    # Retrieve timeout (necessary for SecAggPlus)
     timeout = context.run_config["timeout"]
 
     # Retrieve simulation dataset parameters
@@ -50,6 +47,6 @@ def client_fn(context: Context):
 app = ClientApp(
     client_fn=client_fn,
     mods=[
-        secaggplus_mod, # Enable secure aggregation through SecAgg+
+        secaggplus_mod, # Enable secure aggregation through SecAggPlus
     ],
 )

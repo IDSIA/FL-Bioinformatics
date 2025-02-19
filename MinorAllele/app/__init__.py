@@ -1,1 +1,1 @@
-"""secaggexample: A Flower with SecAgg+ app."""
+"""MinorAllele: A Flower for minor allele frequency."""

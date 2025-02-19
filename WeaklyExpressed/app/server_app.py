@@ -11,7 +11,7 @@ from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
 from flwr.server.strategy import FedAvg
 
-from app.task import get_dummy_start, get_gene_names, get_output_df, get_output_list
+from app.task import get_dummy_start, get_output_df, get_output_list
 
 
 # Flower ServerApp
