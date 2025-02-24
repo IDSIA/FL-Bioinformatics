@@ -11,7 +11,7 @@ dependencies:
   - pip:
       - flwr[simulation]>=1.13.1
       - numpy>=1.21.0
-      - ray=2.31.0
+      - ray==2.31.0
       - pandas
       - datasets>=3.1.0
       - flwr-datasets>=0.5.0
