@@ -31,7 +31,7 @@ def generate_gene_expression_data(num_individuals: int, num_genes: int, seed_val
     gene_names = get_gene_names(num_genes)  
 
     # Random mean (10-50) and std (2-10) for each gene
-    mean_values = np.random.uniform(5, 50, num_genes)
+    mean_values = np.random.uniform(5, 25, num_genes)
     std_dev_values = np.random.uniform(2, 5, num_genes)
 
     # Generate gene expression levels
@@ -64,12 +64,10 @@ def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_
     global partitioner
     
     if partitioner is None:  # Create partitioner only once
-        np.random.seed(seed_value)
         
         dataset = generate_gene_expression_data(num_individuals, num_genes, seed_value)
         dataset = Dataset.from_pandas(dataset)
 
-        np.random.seed(seed_value)
         partitioner = IidPartitioner(num_partitions)
         partitioner.dataset = dataset
         

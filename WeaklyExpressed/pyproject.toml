@@ -25,7 +25,7 @@ expr_perc = 70  # Percentage of individuals with expression < expr_thr to classi
 
 # Simulation dataset parameters
 num_individuals = 100  # Total number of individuals in the dataset
-num_genes = 10  # Number of genes analyzed per individual
+num_genes = 6  # Number of genes analyzed per individual
 seed_value = 21  # Random seed for reproducibility
 
 # Secure Aggregation (SecAggPlus) parameters
