@@ -1,6 +1,6 @@
 # FL-Bioinformatics: Code Examples for Federated Learning  
 
-This repository contains code examples related to the review article **"Technical Insights and Legal Considerations for Advancing Federated Learning in Bioinformatics"**, currently under evaluation for publication in *OUP Bioinformatics*.  
+This repository contains code examples related to the review article [**"Technical Insights and Legal Considerations for Advancing Federated Learning in Bioinformatics,"**](https://arxiv.org/abs/2503.09649) currently under evaluation for publication in *OUP Bioinformatics*.  
 
 We provide three different examples:  
 - **WeaklyExpressed**: Detecting weakly expressed genes in a federated dataset.  
