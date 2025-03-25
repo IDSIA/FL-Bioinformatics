@@ -7,75 +7,6 @@ from datasets import Dataset
 from flwr_datasets.partitioner import IidPartitioner
 
 
-### Create and partition simulation dataset
-
-def get_gene_names(num_genes: int):
-
-    return [f"Gene_{i+1}" for i in range(num_genes)]    
-
-def generate_gene_expression_data(num_individuals: int, num_genes: int, seed_value: int):
-    """
-    Generates a synthetic gene expression dataset with given parameters.
-    
-    Parameters:
-        num_individuals (int): Number of individuals (samples).
-        num_genes (int): Number of genes (features).
-        seed_value (int): Random seed for reproducibility.
-    
-    Returns:
-        pd.DataFrame: A dataframe with gene expression levels.
-    """
-    np.random.seed(seed_value)
-
-    # Define gene names
-    gene_names = get_gene_names(num_genes)  
-
-    # Random mean (10-50) and std (2-10) for each gene
-    mean_values = np.random.uniform(5, 25, num_genes)
-    std_dev_values = np.random.uniform(2, 5, num_genes)
-
-    # Generate gene expression levels
-    data = np.zeros((num_individuals, num_genes))
-    for i in range(num_genes):
-        gene_data = np.abs(np.random.normal(mean_values[i], std_dev_values[i], num_individuals))
-        data[:, i] = np.clip(gene_data, 0, 100)  # Clip to range [0, 100]
-
-    # Create DataFrame
-    dataset = pd.DataFrame(data, columns=gene_names)
-
-    return dataset
-
-partitioner = None
-
-def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_genes: int, seed_value: int):
-    """
-    Loads a partition of the synthetic gene expression dataset.
-    
-    Parameters:
-        partition_id (int): The ID of the partition to load.
-        num_partitions (int): Total number of partitions.
-        num_individuals (int): Number of individuals in the dataset.
-        num_genes (int): Number of genes in the dataset.
-        seed_value (int): Random seed for reproducibility.
-
-    Returns:
-        pd.DataFrame: The selected partition of the dataset.
-    """
-    global partitioner
-    
-    if partitioner is None:  # Create partitioner only once
-        
-        dataset = generate_gene_expression_data(num_individuals, num_genes, seed_value)
-        dataset = Dataset.from_pandas(dataset)
-
-        partitioner = IidPartitioner(num_partitions)
-        partitioner.dataset = dataset
-        
-    partition = partitioner.load_partition(partition_id).with_format("pandas").to_pandas()
-    
-    return partition
-
-
 ### Perform local computation (perc. of gene expression values below threshold)
 
 def compute_expression_percs(dataset: pd.DataFrame, threshold: float):
@@ -152,3 +83,71 @@ def get_output_list(dataset: pd.DataFrame, threshold: int):
     # Filter genes where the value exceeds the threshold
     return values[values > threshold].index.tolist()
 
+
+### Create and partition simulation dataset
+
+def get_gene_names(num_genes: int):
+
+    return [f"Gene_{i+1}" for i in range(num_genes)]    
+
+def generate_gene_expression_data(num_individuals: int, num_genes: int, seed_value: int):
+    """
+    Generates a synthetic gene expression dataset with given parameters.
+    
+    Parameters:
+        num_individuals (int): Number of individuals (samples).
+        num_genes (int): Number of genes (features).
+        seed_value (int): Random seed for reproducibility.
+    
+    Returns:
+        pd.DataFrame: A dataframe with gene expression levels.
+    """
+    np.random.seed(seed_value)
+
+    # Define gene names
+    gene_names = get_gene_names(num_genes)  
+
+    # Random mean (10-50) and std (2-10) for each gene
+    mean_values = np.random.uniform(5, 25, num_genes)
+    std_dev_values = np.random.uniform(2, 5, num_genes)
+
+    # Generate gene expression levels
+    data = np.zeros((num_individuals, num_genes))
+    for i in range(num_genes):
+        gene_data = np.abs(np.random.normal(mean_values[i], std_dev_values[i], num_individuals))
+        data[:, i] = np.clip(gene_data, 0, 100)  # Clip to range [0, 100]
+
+    # Create DataFrame
+    dataset = pd.DataFrame(data, columns=gene_names)
+
+    return dataset
+
+partitioner = None
+
+def load_data(partition_id: int, num_partitions: int, num_individuals: int, num_genes: int, seed_value: int):
+    """
+    Loads a partition of the synthetic gene expression dataset.
+    
+    Parameters:
+        partition_id (int): The ID of the partition to load.
+        num_partitions (int): Total number of partitions.
+        num_individuals (int): Number of individuals in the dataset.
+        num_genes (int): Number of genes in the dataset.
+        seed_value (int): Random seed for reproducibility.
+
+    Returns:
+        pd.DataFrame: The selected partition of the dataset.
+    """
+    global partitioner
+    
+    if partitioner is None:  # Create partitioner only once
+        
+        dataset = generate_gene_expression_data(num_individuals, num_genes, seed_value)
+        dataset = Dataset.from_pandas(dataset)
+
+        partitioner = IidPartitioner(num_partitions)
+        partitioner.dataset = dataset
+        
+    partition = partitioner.load_partition(partition_id).with_format("pandas").to_pandas()
+    
+    return partition

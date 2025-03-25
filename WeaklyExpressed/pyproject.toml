@@ -23,15 +23,15 @@ clientapp = "app.client_app:app"
 expr_thr = 10  # Minimum expression level for a gene to be considered expressed
 expr_perc = 70  # Percentage of individuals with expression < expr_thr to classify a gene as weakly expressed
 
-# Simulation dataset parameters
-num_individuals = 100  # Total number of individuals in the dataset
-num_genes = 6  # Number of genes analyzed per individual
-seed_value = 21  # Random seed for reproducibility
-
 # Secure Aggregation (SecAggPlus) parameters
 num-shares = 3  # Number of secret shares for secure aggregation
 reconstruction-threshold = 2  # Minimum number of shares required for reconstruction
 timeout = 15.0  # Timeout duration (seconds) for secure aggregation
+
+# Simulation dataset parameters
+num_individuals = 100  # Total number of individuals in the dataset
+num_genes = 6  # Number of genes analyzed per individual
+seed_value = 21  # Random seed for reproducibility
 
 [tool.flwr.federations]
 default = "local-simulation"
