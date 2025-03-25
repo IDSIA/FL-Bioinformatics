@@ -9,7 +9,7 @@ from flwr_datasets.partitioner import IidPartitioner
 
 ### Perform local computation (perc. of gene expression values below threshold)
 
-def compute_expression_percs(dataset: pd.DataFrame, threshold: float):
+def compute_low_expression_percs(dataset: pd.DataFrame, threshold: float):
     """
     Computes the percentage of gene expression values below a given threshold.
     

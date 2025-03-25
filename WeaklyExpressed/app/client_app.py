@@ -4,7 +4,7 @@ from flwr.client import ClientApp, NumPyClient
 from flwr.client.mod import secaggplus_mod
 from flwr.common import Context
 
-from app.task import load_data, compute_expression_percs
+from app.task import load_data, compute_low_expression_percs
 
 
 # Define Flower Client
@@ -18,7 +18,7 @@ class FlowerClient(NumPyClient):
 
     # Perform local computation (perc. of gene expression values below threshold)
     def fit(self, parameters, config):
-        percs = compute_expression_percs(self.data, self.expr_thr)
+        percs = compute_low_expression_percs(self.data, self.expr_thr)
         return [percs], len(self.data), {}
         
 
