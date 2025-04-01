@@ -4,7 +4,7 @@ from logging import DEBUG
 
 from flwr.common import Context, ndarrays_to_parameters, parameters_to_ndarrays
 from flwr.common.logger import update_console_handler
-import flwr.common.recordset_compat as compat
+from flwr.common.record import ParametersRecord
 from flwr.server import Grid, LegacyContext, ServerApp, ServerConfig
 from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
@@ -57,9 +57,5 @@ def main(grid: Grid, context: Context) -> None:
     workflow(grid, context)
 
     # Final result - printed in the logs (see workflow file)
-    paramsrecord = context.state.parameters_records[MAIN_PARAMS_RECORD]
-    parameters = compat.parametersrecord_to_parameters(paramsrecord, True)
-    ndarrays = parameters_to_ndarrays(parameters)
-
-
-    
+    paramsrecord = context.state[MAIN_PARAMS_RECORD]
+    ndarrays = ParametersRecord.to_numpy_ndarrays(paramsrecord)
