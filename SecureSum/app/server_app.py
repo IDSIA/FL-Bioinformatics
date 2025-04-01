@@ -5,7 +5,7 @@ from logging import DEBUG
 from flwr.common import Context, ndarrays_to_parameters, parameters_to_ndarrays
 from flwr.common.logger import update_console_handler
 import flwr.common.recordset_compat as compat
-from flwr.server import Driver, LegacyContext, ServerApp, ServerConfig
+from flwr.server import Grid, LegacyContext, ServerApp, ServerConfig
 from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from flwr.server.workflow.constant import MAIN_PARAMS_RECORD
 from flwr.server.strategy import FedAvg
@@ -19,7 +19,7 @@ app = ServerApp()
 
 
 @app.main()
-def main(driver: Driver, context: Context) -> None:
+def main(grid: Grid, context: Context) -> None:
 
     # Define strategy
     strategy = FedSum(
@@ -54,7 +54,7 @@ def main(driver: Driver, context: Context) -> None:
     workflow = DefaultWorkflow(fit_workflow=fit_workflow)
 
     # Execute
-    workflow(driver, context)
+    workflow(grid, context)
 
     # Final result - printed in the logs (see workflow file)
     paramsrecord = context.state.parameters_records[MAIN_PARAMS_RECORD]
